@@ -25,28 +25,32 @@ router.get('/', function(req, res, next) {
 //     console.log(e.msg);
 // }
 
-var pallete = 'ffmpeg -y -ss 30 -t 3 -i ./test-files/theOne.mp4 -vf fps=10,scale=320:-1:flags=lanczos,palettegen palette.png';
+var pallete = 'ffmpeg -y -ss 100 -t 3 -i ./test-files/theOne.mp4 -vf fps=10,scale=320:-1:flags=lanczos,palettegen palette.png';
+var output = 'ffmpeg -ss 100 -t 3 -i ./test-files/theOne.mp4 -i palette.png -filter_complex "fps=10,scale=320:-1:flags=lanczos[x];[x][1:v]paletteuse" ./output-files/output.gif';
+
 exec(pallete, function(err, stdout, stderr){
     if (err) {
         // node couldn't execute the command
         return;
     }
-    var output = 'ffmpeg -ss 30 -t 3 -i ./test-files/theOne.mp4 -i palette.png -filter_complex "fps=10,scale=320:-1:flags=lanczos[x];[x][1:v]paletteuse" output.gif';
+
+    //generates gif
     exec(output, function(err, stdout, stderr){
         if (err) {
             // node couldn't execute the command
             return;
         }
-        console.log("Finished...");
         // the *entire* stdout and stderr (buffered)
-        console.log('stdout:', stdout);
-        console.log('stderr:', stderr);
+        // console.log('stdout:', stdout);
+        // console.log('stderr:', stderr);
+        console.log("Finished...");
+
     });
 
 
     // the *entire* stdout and stderr (buffered)
-    console.log('stdout:', stdout);
-    console.log('stderr:', stderr);
+    // console.log('stdout:', stdout);
+    // console.log('stderr:', stderr);
 });
 
 module.exports = router;
